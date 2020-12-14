@@ -22,7 +22,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../python数分第六章" />
   </component>
   <component name="RunManager">
     <configuration name="ProcessManager" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -66,10 +66,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="932" y="214" key="FileChooserDialogImpl" timestamp="1607674638343">
+    <state x="932" y="214" key="FileChooserDialogImpl" timestamp="1607833185670">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="932" y="214" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1607674638343" />
+    <state x="932" y="214" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1607833185670" />
     <state width="1514" height="571" key="GridCell.Tab.0.bottom" timestamp="1607761695884">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
