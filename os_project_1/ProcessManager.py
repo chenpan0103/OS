@@ -1,4 +1,5 @@
 
+## PCB保存进程的相关信息
 class PCB():
     def __init__(self,pid,cpu,mem,open_files,other_sources,status,
                  parent,children,priority,bl_resource):
@@ -13,6 +14,7 @@ class PCB():
         self.priority=priority
         self.bl_resource=bl_resource
 
+## 进程和资源管理器
 class ProcessManager():
     ## 初始化资源，ready队列，block队列，running进程......
     def __init__(self):
@@ -58,17 +60,21 @@ class ProcessManager():
         self.Print()
         # self.Scheduler()
 
+    ## 调度就绪队列
     def scheduler_ready(self):
         for i in range(2,-1,-1):
             if len(self.ready[i])!=0:
                 return self.ready[i].pop(0)
         return None
+
+    ## 判断就绪队列是否为空
     def ready_is_empty(self):
         if len(self.ready[2])==0 and len\
                     (self.ready[1])==0 and len(self.ready[0])==0:
             return True
         else:
             return False
+
     ## 请求资源
     def request(self,rname,rnum):
         cur_num=self.resource[rname]
@@ -152,8 +158,8 @@ class ProcessManager():
 
 
         ## 唤醒block中的进程,这里只考虑一个进程最多只被一种资源堵塞的情况
-        ## 对于占有多个资源的释放应该考虑堵塞进程的优先顺序，需设立一个标志来判断
-        ## 不同资源间的堵塞时间顺序
+        ## 对于占有多个资源的释放应该考虑堵塞进程的优先顺序，需设立一个标志（bl_list)
+        ## 来判断不同资源间的堵塞时间顺序
         sign = False
         for pcb in self.block_list:
             """
@@ -215,11 +221,25 @@ class ProcessManager():
         parent=tagPCB.parent
         children=tagPCB.children
         clist=[item.pid for item in children]
-        # print("print the information of the  )
+        print("="*55)
+        print("print the information of PCB" )
+        print('-'*55)
         print("Pid:{} Priority:{} Parent:{} Children"
-              ":{} Status:{} Occupied_Resource:"
-              "{} ".format(tagPCB.pid,tagPCB.priority,tagPCB.parent.pid,
-                           clist,tagPCB.status,tagPCB.other_sources))
+              ":{} Status:{} ".format(tagPCB.pid,
+                    tagPCB.priority,tagPCB.parent.pid,
+                           clist,tagPCB.status))
+        print("Occupied_Resource:{} ".format(tagPCB.other_sources))
+        print("Block_resources：{}".format(tagPCB.bl_resource))
+        print('-'*55)
+
+## 异常类的定义
+class MyException(Exception):
+    def __init__(self,cmds,messsage):
+        self.message=messsage
+        self.cmds=cmds
+
+    def __str__(self):
+        return "wrong input：{}".format(self.cmds)+self.message
 
 import shlex
 def Test_shell(filepath):
@@ -248,9 +268,12 @@ def Test_shell(filepath):
                     manager.list_res()
                 elif cmd[0] == "pr":
                     manager.printPCB(cmd[1])
+                else:
+                    raise MyException(cmd,",please try again!")
                 break
 
-Test_shell("./cmd.txt")
+if __name__=="__main__":
+    Test_shell("./cmd.txt")
 
 # manager=ProcessManager()
 # manager.init()
