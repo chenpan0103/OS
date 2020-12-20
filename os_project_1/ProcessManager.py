@@ -14,7 +14,7 @@ class PCB():
         self.bl_resource=bl_resource
 
 class ProcessManager():
-    ## 初始化资源，ready队列，block队列，running进程
+    ## 初始化资源，ready队列，block队列，running进程......
     def __init__(self):
         self.resource={"R1":1,"R2":2,"R3":3,"R4":4}
         self.maxresource={"R1":1,"R2":2,"R3":3,"R4":4}
@@ -31,8 +31,9 @@ class ProcessManager():
     ##创建根进程
     def init(self):
         newPCB = PCB(pid="init", cpu=None, mem=None, open_files=None,
-                     other_sources={"R1":0,"R2":0,"R3":0,"R4":0}, status="running", parent=self.running,
-                     children=[], priority=0,bl_resource={"R1":0,"R2":0,"R3":0,"R4":0})
+                     other_sources={"R1":0,"R2":0,"R3":0,"R4":0},
+                     status="running",parent=self.running,children=[],
+                     priority=0,bl_resource={"R1":0,"R2":0,"R3":0,"R4":0})
         self.running=newPCB
         self.processdic[newPCB.pid]=newPCB
         print("init process is running")
@@ -87,7 +88,8 @@ class ProcessManager():
         else:
             self.resource[rname]-=rnum
             self.running.other_sources[rname]+=rnum
-            print("process {} requests {} {}".format(self.running.pid,rnum,rname))
+            print("process {} requests {} {}".format(self.running.pid,
+                                                     rnum,rname))
 
     ## 进程释放资源
     def release(self,pid,rname):
@@ -149,12 +151,6 @@ class ProcessManager():
                     self.block_list.remove(item)
 
 
-        ## 递归需在唤醒进程前，因为可能会删除需唤醒的进程
-        ## 同时，资源释放需全部释放后才应该唤醒进程
-        if len(tagPCB.children)!=0:
-            for child in tagPCB.children:
-                self.destroy(child.pid)
-
         ## 唤醒block中的进程,这里只考虑一个进程最多只被一种资源堵塞的情况
         ## 对于占有多个资源的释放应该考虑堵塞进程的优先顺序，需设立一个标志来判断
         ## 不同资源间的堵塞时间顺序
@@ -179,7 +175,7 @@ class ProcessManager():
                         self.ready[pcb.priority].append(pcb)
                     print("release {}. wake up processs {}.".format(k,pcb.pid))
                     sign=True
-        if sign == False:
+        if sign == False and tagPCB.status=="running":
             if self.ready_is_empty():
                 print("There is no process.")
             elif len(self.ready[tagPCB.priority])==0:
@@ -189,6 +185,11 @@ class ProcessManager():
             else:
                 self.running = self.scheduler_ready()
                 self.running.status = "running"
+
+        ## 递归处理
+        if len(tagPCB.children) != 0:
+            for child in tagPCB.children:
+               self.destroy(child.pid)
 
     ## 模拟时间中断
     def timeout(self):
@@ -207,7 +208,7 @@ class ProcessManager():
                       format(self.running.pid, tmpPCB.pid))
             else:
                 self.Print()
-                
+
      ## 打印给定进程的信息
     def printPCB(self,pid):
         tagPCB=self.processdic[pid]
@@ -215,8 +216,10 @@ class ProcessManager():
         children=tagPCB.children
         clist=[item.pid for item in children]
         # print("print the information of the  )
-        print("Pid:{} Priority:{} Parent:{} Children:{} Status:{} Occupied_Resource:"
-              "{} ".format(tagPCB.pid,tagPCB.priority,tagPCB.parent.pid,clist,tagPCB.status,tagPCB.other_sources))
+        print("Pid:{} Priority:{} Parent:{} Children"
+              ":{} Status:{} Occupied_Resource:"
+              "{} ".format(tagPCB.pid,tagPCB.priority,tagPCB.parent.pid,
+                           clist,tagPCB.status,tagPCB.other_sources))
 
 import shlex
 def Test_shell(filepath):
